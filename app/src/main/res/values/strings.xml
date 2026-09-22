@@ -71,6 +71,7 @@
     <string name="about_title">About KernelSU Next Root</string>
     <string name="about_description">About KernelSU Next Root</string>
     <string name="about_body">Offline KernelSU Next Root build for Galaxy S24 Ultra SM-S928B on exact S928BXXU5DZDP firmware. KernelSU Next 3.4.0 payloads are bundled in the APK.</string>
+    <string name="author_name" translatable="false">Author: Vishesh (Vishesh-093)</string>
 
     <string name="install_title">Install</string>
     <string name="install_keep_open">Keep this screen open until installation finishes</string>

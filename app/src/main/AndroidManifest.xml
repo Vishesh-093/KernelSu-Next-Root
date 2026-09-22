@@ -16,6 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.S25URoot">
+        <meta-data
+            android:name="io.github.vishesh093.ksunextroot.AUTHOR"
+            android:value="Vishesh (Vishesh-093)" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

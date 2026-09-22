@@ -3,6 +3,8 @@
 An exact-device, fully offline KernelSU Next 3.4.0 build for the Galaxy S24
 Ultra `SM-S928B` running `S928BXXU5DZDP`.
 
+Author: **Vishesh ([Vishesh-093](https://github.com/Vishesh-093))**
+
 This `kernelsu-next` branch was derived from Root My Galaxy and rebranded with
 a red Material 3 theme. It contains two launchers that can coexist:
 
