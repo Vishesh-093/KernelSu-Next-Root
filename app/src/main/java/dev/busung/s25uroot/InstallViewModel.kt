@@ -149,6 +149,13 @@ class InstallViewModel(application: Application) : AndroidViewModel(application)
                     }
                     appendLog(app.getString(R.string.log_shizuku_permission))
                 }
+                if (detectInstalled()) {
+                    storeInstallReceipt()
+                    setPhase(InstallPhase.Installed, app.getString(R.string.status_ksu_active))
+                    appendLog(app.getString(R.string.log_ksu_control_verified))
+                    finishHistory(InstallRunResult.Succeeded)
+                    return@launch
+                }
                 setPhase(InstallPhase.Checking, app.getString(R.string.status_checking_github))
                 val profile = if (profileId == null) {
                     repository.resolveTarget(DeviceSnapshot.current())
@@ -349,8 +356,22 @@ class InstallViewModel(application: Application) : AndroidViewModel(application)
         appendLog(app.getString(R.string.log_ksu_control_verified))
     }
 
-    private fun detectInstalled(): Boolean {
+    private suspend fun detectInstalled(): Boolean {
         if (NativeProbe.isKernelSuActive()) return true
+        val shizukuReady = ShizukuController.isGranted() ||
+            (ShizukuController.pingUntilRunning(1_000) && ShizukuController.isGranted())
+        if (shizukuReady) {
+            val shellProbe = runCatching {
+                ShizukuController.capture(
+                    arrayOf(
+                        "sh",
+                        "-c",
+                        "(test -d /sys/module/kernelsu || grep -q '^kernelsu ' /proc/modules) && echo ksu-active",
+                    ),
+                )
+            }.getOrNull()
+            if (shellProbe?.lineSequence()?.any { it.trim() == "ksu-active" } == true) return true
+        }
         val bootToken = currentBootToken() ?: return false
         val receipt = app.getSharedPreferences(INSTALL_RECEIPT, Application.MODE_PRIVATE)
         return receipt.getString(RECEIPT_BOOT_TOKEN, null) == bootToken &&

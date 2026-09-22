@@ -103,6 +103,23 @@ ksud-e3q-S928BXXS6DZF2-kdp
 SHA-256 43f451313dc111429187f8f93e76c57c42976323782aac936c1c09aa309b76b3
 ```
 
+### KernelSU v3.3.0 forward-port
+
+The offline app now selects a versioned v3.3.0 pair for this exact S928B
+DZF2 profile. It was built from upstream commit
+`932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e` with the Samsung
+KDP/RKP/DEFEX no-patch-text patch and NDK r29:
+
+| File | Size (bytes) | SHA-256 |
+| --- | ---: | --- |
+| `kernelsu/android14-6.1_kernelsu-e3q-S928BXXS6DZF2-kdp-v3.3.0.ko` | 404,864 | `70403cdcd239229a0eec18903002d08c839bc787ab6701ecc7eb31d9ccca5bc1` |
+| `kernelsu/ksud-e3q-S928BXXS6DZF2-kdp-v3.3.0` | 4,989,824 | `396169ca5729ad1c35b557dab32bb2221d150ddfc0c84140aa19a18b7d061abd` |
+
+The module reports version `32601`, the exact S928B vermagic, an empty
+`__versions` section, 203 unique undefined imports accepted by KernelSU's DDK
+symbol checker, and no `stop_machine` or text-patching imports. Unlike the
+v3.2.5 pair below, this forward-port is not yet hardware-validated.
+
 ## Support
 
 Feed updated in `targets-v3.json` (payload `e3q-S928BXXS6DZF2`, models

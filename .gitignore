@@ -2,6 +2,7 @@
 **/.gradle/
 **/build/
 **/.cxx/
+build-ksu330/
 local.properties
 
 # Generated/distributable binaries
@@ -13,6 +14,7 @@ local.properties
 *.tar
 *.tar.*
 *.bin
+!app/src/main/assets/manager/KernelSU_v3.3.0_32601-release.apk
 
 # Local secrets and signing material
 *.jks

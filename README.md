@@ -1,22 +1,39 @@
 # Root My Galaxy SM-S928B/U/W Offline
 
 Offline Root My Galaxy workspace for Galaxy S24 Ultra `e3q` on exact DZF2
-firmware. One APK bundles three independently audited targets:
+firmware, plus an experimental exact-match DZDP profile. One APK bundles four
+targets:
 
 | Model | Firmware | Kernel | Profile |
 | --- | --- | --- | --- |
 | `SM-S928U` / `SM-S928U1` | `S928U1UES6DZF2` / `S928USQS6DZF2` | `6.1.145-android14-11-33419968-abS928USQS6DZF2` | `e3q-S928USQS6DZF2` |
 | `SM-S928W` | `S928WVLS6DZF2` | `6.1.145-android14-11-33419968-abS928USQS6DZF2` | `e3q-S928W-S928USQS6DZF2` |
 | `SM-S928B` | `S928BXXS6DZF2` | `6.1.145-android14-11-33419968-abS928BXXS6DZF2` | `e3q-S928BXXS6DZF2` |
+| `SM-S928B` | `S928BXXU5DZDP` (experimental) | `6.1.145-android14-11-33419968-abS928BXXU5DZDP` | `e3q-S928BXXU5DZDP` |
 
 This repository keeps the public-source payload tree, the offline Android app,
 target manifests, KernelSU pairs, and the helper scripts needed to reproduce
 the pack. Use it only on devices you own or are explicitly authorized to test.
 
-The app does not download payloads from GitHub. Matching is exact: model plus
-kernel `6.1.145` plus the DZF2 kernel release and build token. `SM-S928N`,
-`SM-S9280`, and any non-DZF2 build are rejected. `SM-S928W` is its own
-profile; it does not reuse the U/U1 payload or `ksud`.
+The app does not download payloads from GitHub. Matching is exact: model,
+kernel release, and firmware build token. `SM-S928N`, `SM-S9280`, and any
+unlisted build are rejected. `SM-S928W` is its own profile; it does not reuse
+the U/U1 payload or `ksud`.
+
+The DZDP entry uses the S928B payload bytes published on the
+`keyarr/zdp-s928b-support` branch. Those bytes are identical to BuSung's S928B
+DZF2 payload. BuSung's DZDP tracking record reports matching kernel symbols but
+still labels physical-page reclaim tuning as pending. The paired KernelSU
+3.3.0 module in this tree was rebuilt with exact DZDP vermagic. The complete
+flow is now validated on the exact connected DZDP device: driver `32601`,
+SELinux enforcing, and repeated `su` checks passed. Treat the exploit as
+experimental because its physical-page reclaim remains probabilistic.
+
+Version 0.3.8 also verifies an already-loaded KernelSU module through the
+authorized Shizuku shell. This prevents a redundant exploit run when another
+Root My Galaxy build loaded KernelSU first or when this APK is updated during
+the same boot. Its bootstrap helper also falls back to the KernelSU 3.3
+`late-load` syntax after detecting the removed `--ephemeral` option.
 
 ## Screenshots
 
@@ -103,6 +120,7 @@ The method is per-boot. A reboot drops KernelSU until you run the app again.
 - [SM-S928U1 record](docs/SM-S928U1-S928U1UES6DZF2.md)
 - [SM-S928W record](docs/SM-S928W-S928USQS6DZF2.md)
 - [SM-S928B record](docs/SM-S928B-S928BXXS6DZF2.md)
+- [SM-S928B DZDP experimental record](docs/SM-S928B-S928BXXU5DZDP.md)
 
 ## Quick Start
 
@@ -121,7 +139,7 @@ Build the debug APK:
 A prebuilt debug APK from this tree is:
 
 ```text
-dist/RootMyGalaxy-S928-DZF2-offline-v0.3.4.apk
+dist/RootMyGalaxy-S928B-DZDP-offline-KernelSU-v3.3.0.apk
 ```
 
 Rebuild one public payload:
@@ -143,8 +161,13 @@ src/targets/e3q-S928BXXS6DZF2/target.h
 artifacts/e3q-S928USQS6DZF2/cve-2026-43499-app.so
 artifacts/e3q-S928W-S928USQS6DZF2/cve-2026-43499-app.so
 artifacts/e3q-S928BXXS6DZF2/cve-2026-43499-app.so
+artifacts/e3q-S928BXXU5DZDP/cve-2026-43499-app.so
 kernelsu/ksud-e3q-S928USQS6DZF2-kdp
 kernelsu/ksud-e3q-S928BXXS6DZF2-kdp
+kernelsu/ksud-e3q-S928BXXS6DZF2-kdp-v3.3.0
+kernelsu/android14-6.1_kernelsu-e3q-S928BXXS6DZF2-kdp-v3.3.0.ko
+kernelsu/ksud-e3q-S928BXXU5DZDP-kdp-v3.3.0
+kernelsu/android14-6.1_kernelsu-e3q-S928BXXU5DZDP-kdp-v3.3.0.ko
 ```
 
 ## Credits
@@ -163,5 +186,10 @@ Thanks to [mvfsullivan](https://github.com/mvfsullivan) for the Canadian
 `SM-S928W` bucket / `ksud` findings and hardware evidence:
 [BuSung-dev/Root-My-Galaxy-Payloads#216](https://github.com/BuSung-dev/Root-My-Galaxy-Payloads/pull/216).
 
-This repository is an offline S24 Ultra DZF2 pack. It is not the official
+The experimental DZDP profile is based on the analysis in
+[BuSung-dev/Root-My-Galaxy-Payloads#51](https://github.com/BuSung-dev/Root-My-Galaxy-Payloads/issues/51)
+and the artifact publication on `keyarr/zdp-s928b-support` commit
+`06a9730d6d31ad27407ac9c5680dd907296a91bd`.
+
+This repository is an offline S24 Ultra DZF2/DZDP pack. It is not the official
 multi-device Root My Galaxy feed.

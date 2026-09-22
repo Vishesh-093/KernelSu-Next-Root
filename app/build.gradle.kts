@@ -6,13 +6,14 @@ plugins {
 android {
     namespace = "dev.busung.s25uroot"
     compileSdk = 37
+    ndkVersion = "29.0.14206865"
 
     defaultConfig {
         applicationId = "io.github.fusiondrive.RMGs928offline"
         minSdk = 33
         targetSdk = 36
-        versionCode = 44
-        versionName = "0.3.4-s928-dzf2-offline"
+        versionCode = 48
+        versionName = "0.3.8-s928-dzdp-offline-ksu-3.3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {

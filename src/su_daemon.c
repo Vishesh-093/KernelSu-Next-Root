@@ -488,6 +488,25 @@ static int run_kernelsu_late_load(struct su_request *request, int conn) {
     }
 
     int loader_status = wait_status(loader);
+    if (loader_status == 2) {
+      /* KernelSU 3.3 removed the --ephemeral option.  Keep the old invocation
+       * for 3.2.x payloads, then retry with the 3.3-compatible CLI only when
+       * clap reports a command-line usage error. */
+      loader = fork();
+      if (loader < 0) {
+        dprintf(STDERR_FILENO, "late-load: compatibility retry fork: %s\n",
+                strerror(errno));
+        _exit(12);
+      }
+      if (loader == 0) {
+        execl(LOGCAT_PATH, "logcat", "late-load",
+              "--package-name", "me.weishu.kernelsu", (char *)NULL);
+        dprintf(STDERR_FILENO, "late-load: compatibility retry exec: %s\n",
+                strerror(errno));
+        _exit(12);
+      }
+      loader_status = wait_status(loader);
+    }
     if (loader_status != 0) {
       _exit(loader_status);
     }

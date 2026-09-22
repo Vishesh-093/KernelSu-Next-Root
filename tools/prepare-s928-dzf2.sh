@@ -7,15 +7,20 @@ REPO_ROOT="$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)"
 U_PROFILE="e3q-S928USQS6DZF2"
 W_PROFILE="e3q-S928W-S928USQS6DZF2"
 B_PROFILE="e3q-S928BXXS6DZF2"
+DZDP_PROFILE="e3q-S928BXXU5DZDP"
 
 U_PAYLOAD_SHA="b2931d8980f969b5a0cb05bd67f6804f445ad4a4c867a7b4c4081c2ffac5b36a"
 W_PAYLOAD_SHA="82531cb637067d8e849f1c9d259933dcc3bed3519c1603841333cc8bcbd789e0"
 B_PAYLOAD_SHA="a49b378d654c7e637697a701c3c4c5fd02d22b9b30a7069c03e64ec5844af206"
 U_KSUD_SHA="10c1bf87f8e475e6ab8c5d1c5a085aa1544ee091f4451ad65141ea75261ab610"
-B_KSUD_SHA="43f451313dc111429187f8f93e76c57c42976323782aac936c1c09aa309b76b3"
-HELPER_SHA="54894e9bfa80fc36cfa03bd4ec4279e1d56eccc9719c9ee395b64ffd6792866b"
+B_KSUD_LEGACY_SHA="43f451313dc111429187f8f93e76c57c42976323782aac936c1c09aa309b76b3"
+B_KSUD_SHA="396169ca5729ad1c35b557dab32bb2221d150ddfc0c84140aa19a18b7d061abd"
+HELPER_SHA="370ca3c5a1b9514b279c8b31ce231d27ba69ecef6744664c476d423e08c6bf47"
 U_KO_SHA="ed7afea6cd221d5698739d3a1633264c084ffb77f2df730e5808941e0a555de5"
-B_KO_SHA="14f805c6a03123e84f10a252eb5b47f6c65c56c05ad4ccccf1f836c6867f64a9"
+B_KO_LEGACY_SHA="14f805c6a03123e84f10a252eb5b47f6c65c56c05ad4ccccf1f836c6867f64a9"
+B_KO_SHA="70403cdcd239229a0eec18903002d08c839bc787ab6701ecc7eb31d9ccca5bc1"
+DZDP_KSUD_SHA="5686641a536ee92ab69451e025985c7be01bef2c452582fa338b276a445ee5de"
+DZDP_KO_SHA="dd677e9e9e6372009a3a8e68ca1ba0ec1c889d23a3547cd7f4c1aa2c07dd7882"
 
 DO_PREPARE_APP=1
 DO_BUILD_APK=0
@@ -30,7 +35,8 @@ Usage:
   ${0##*/} [options]
 
 Default:
-  verifies the bundled S928U/U1, S928W, and S928B DZF2 artifacts and
+  verifies the bundled S928U/U1, S928W, S928B DZF2, and experimental
+  S928B DZDP artifacts and
   refreshes app/src/main/assets.
 
 Options:
@@ -116,32 +122,48 @@ require_cmd python3
 U_PAYLOAD="${REPO_ROOT}/artifacts/${U_PROFILE}/cve-2026-43499-app.so"
 W_PAYLOAD="${REPO_ROOT}/artifacts/${W_PROFILE}/cve-2026-43499-app.so"
 B_PAYLOAD="${REPO_ROOT}/artifacts/${B_PROFILE}/cve-2026-43499-app.so"
+DZDP_PAYLOAD="${REPO_ROOT}/artifacts/${DZDP_PROFILE}/cve-2026-43499-app.so"
 U_KSUD="${REPO_ROOT}/kernelsu/ksud-${U_PROFILE}-kdp"
-B_KSUD="${REPO_ROOT}/kernelsu/ksud-${B_PROFILE}-kdp"
-W_KSUD="$B_KSUD"
+B_KSUD_LEGACY="${REPO_ROOT}/kernelsu/ksud-${B_PROFILE}-kdp"
+B_KSUD="${REPO_ROOT}/kernelsu/ksud-${B_PROFILE}-kdp-v3.3.0"
+DZDP_KSUD="${REPO_ROOT}/kernelsu/ksud-${DZDP_PROFILE}-kdp-v3.3.0"
+W_KSUD="$B_KSUD_LEGACY"
 U_KO="${REPO_ROOT}/kernelsu/android14-6.1_kernelsu-${U_PROFILE}-kdp.ko"
-B_KO="${REPO_ROOT}/kernelsu/android14-6.1_kernelsu-${B_PROFILE}-kdp.ko"
+B_KO_LEGACY="${REPO_ROOT}/kernelsu/android14-6.1_kernelsu-${B_PROFILE}-kdp.ko"
+B_KO="${REPO_ROOT}/kernelsu/android14-6.1_kernelsu-${B_PROFILE}-kdp-v3.3.0.ko"
+DZDP_KO="${REPO_ROOT}/kernelsu/android14-6.1_kernelsu-${DZDP_PROFILE}-kdp-v3.3.0.ko"
 HELPER="${REPO_ROOT}/app/src/main/jniLibs/arm64-v8a/libcve43499root.so"
 
 info "verifying published artifacts"
 assert_file "$U_PAYLOAD"
 assert_file "$W_PAYLOAD"
 assert_file "$B_PAYLOAD"
+assert_file "$DZDP_PAYLOAD"
 assert_file "$U_KSUD"
+assert_file "$B_KSUD_LEGACY"
 assert_file "$B_KSUD"
+assert_file "$DZDP_KSUD"
 assert_file "$U_KO"
+assert_file "$B_KO_LEGACY"
 assert_file "$B_KO"
+assert_file "$DZDP_KO"
 assert_file "$HELPER"
 test "$(file_size "$U_PAYLOAD")" = "104128" || die "U payload size mismatch"
 test "$(file_size "$W_PAYLOAD")" = "104128" || die "W payload size mismatch"
 test "$(file_size "$B_PAYLOAD")" = "104128" || die "B payload size mismatch"
+test "$(file_size "$DZDP_PAYLOAD")" = "104128" || die "DZDP payload size mismatch"
 assert_sha256 "$U_PAYLOAD" "$U_PAYLOAD_SHA" "S928U payload"
 assert_sha256 "$W_PAYLOAD" "$W_PAYLOAD_SHA" "S928W payload"
 assert_sha256 "$B_PAYLOAD" "$B_PAYLOAD_SHA" "S928B payload"
+assert_sha256 "$DZDP_PAYLOAD" "$B_PAYLOAD_SHA" "S928B DZDP BuSung payload"
 assert_sha256 "$U_KSUD" "$U_KSUD_SHA" "S928U ksud"
+assert_sha256 "$B_KSUD_LEGACY" "$B_KSUD_LEGACY_SHA" "S928B legacy ksud"
 assert_sha256 "$B_KSUD" "$B_KSUD_SHA" "S928B ksud"
+assert_sha256 "$DZDP_KSUD" "$DZDP_KSUD_SHA" "S928B DZDP ksud"
 assert_sha256 "$U_KO" "$U_KO_SHA" "S928U kernelsu.ko"
+assert_sha256 "$B_KO_LEGACY" "$B_KO_LEGACY_SHA" "S928B legacy kernelsu.ko"
 assert_sha256 "$B_KO" "$B_KO_SHA" "S928B kernelsu.ko"
+assert_sha256 "$DZDP_KO" "$DZDP_KO_SHA" "S928B DZDP kernelsu.ko"
 assert_sha256 "$HELPER" "$HELPER_SHA" "public root helper"
 
 python3 - "$REPO_ROOT/app/src/main/assets/targets-v3.json" <<'PY'
@@ -152,9 +174,10 @@ ids = [item["payloadId"] for item in root["payloads"]]
 assert ids == [
     "e3q-S928USQS6DZF2",
     "e3q-S928W-S928USQS6DZF2",
+    "e3q-S928BXXU5DZDP",
     "e3q-S928BXXS6DZF2",
 ], ids
-print("[+] targets-v3.json has the three DZF2 profiles")
+print("[+] targets-v3.json has the three DZF2 profiles and experimental DZDP profile")
 PY
 
 if [ "$DO_PREPARE_APP" -eq 1 ]; then
@@ -162,11 +185,15 @@ if [ "$DO_PREPARE_APP" -eq 1 ]; then
   install -d "${REPO_ROOT}/app/src/main/assets/${U_PROFILE}"
   install -d "${REPO_ROOT}/app/src/main/assets/${W_PROFILE}"
   install -d "${REPO_ROOT}/app/src/main/assets/${B_PROFILE}"
+  install -d "${REPO_ROOT}/app/src/main/assets/${DZDP_PROFILE}"
   install -m 0644 "$U_PAYLOAD" "${REPO_ROOT}/app/src/main/assets/${U_PROFILE}/cve-2026-43499-app.so"
   install -m 0644 "$U_KSUD" "${REPO_ROOT}/app/src/main/assets/${U_PROFILE}/ksud-${U_PROFILE}-kdp"
   install -m 0644 "$W_PAYLOAD" "${REPO_ROOT}/app/src/main/assets/${W_PROFILE}/cve-2026-43499-app.so"
+  install -m 0644 "$B_KSUD_LEGACY" "${REPO_ROOT}/app/src/main/assets/${B_PROFILE}/ksud-${B_PROFILE}-kdp"
   install -m 0644 "$B_PAYLOAD" "${REPO_ROOT}/app/src/main/assets/${B_PROFILE}/cve-2026-43499-app.so"
-  install -m 0644 "$B_KSUD" "${REPO_ROOT}/app/src/main/assets/${B_PROFILE}/ksud-${B_PROFILE}-kdp"
+  install -m 0644 "$B_KSUD" "${REPO_ROOT}/app/src/main/assets/${B_PROFILE}/ksud-${B_PROFILE}-kdp-v3.3.0"
+  install -m 0644 "$DZDP_PAYLOAD" "${REPO_ROOT}/app/src/main/assets/${DZDP_PROFILE}/cve-2026-43499-app.so"
+  install -m 0644 "$DZDP_KSUD" "${REPO_ROOT}/app/src/main/assets/${DZDP_PROFILE}/ksud-${DZDP_PROFILE}-kdp-v3.3.0"
   install -m 0644 "${REPO_ROOT}/support/targets-v3.json" "${REPO_ROOT}/app/src/main/assets/targets-v3.json"
 fi
 
@@ -204,9 +231,21 @@ if [ "$DO_ADB_CHECK" -eq 1 ] && { [ "$DO_STAGE_ADB" -eq 1 ] || [ "$DO_PRINT_COMM
         SELECTED_KSUD="$W_KSUD"
         ;;
       SM-S928B)
-        SELECTED_PROFILE="$B_PROFILE"
-        SELECTED_PAYLOAD="$B_PAYLOAD"
-        SELECTED_KSUD="$B_KSUD"
+        case "$KERNEL" in
+          6.1.145-android14-11-33419968-abS928BXXS6DZF2)
+            SELECTED_PROFILE="$B_PROFILE"
+            SELECTED_PAYLOAD="$B_PAYLOAD"
+            SELECTED_KSUD="$B_KSUD"
+            ;;
+          6.1.145-android14-11-33419968-abS928BXXU5DZDP)
+            SELECTED_PROFILE="$DZDP_PROFILE"
+            SELECTED_PAYLOAD="$DZDP_PAYLOAD"
+            SELECTED_KSUD="$DZDP_KSUD"
+            ;;
+          *)
+            echo "warning: connected SM-S928B kernel ${KERNEL} is not an exact bundled target" >&2
+            ;;
+        esac
         ;;
       *)
         echo "warning: connected model ${MODEL} is not a bundled DZF2 target" >&2
@@ -218,7 +257,7 @@ if [ "$DO_ADB_CHECK" -eq 1 ] && { [ "$DO_STAGE_ADB" -eq 1 ] || [ "$DO_PRINT_COMM
 fi
 
 if [ "$DO_STAGE_ADB" -eq 1 ]; then
-  [ -n "$SELECTED_PROFILE" ] || die "cannot stage ADB files without a matching S928 DZF2 device"
+  [ -n "$SELECTED_PROFILE" ] || die "cannot stage ADB files without an exact matching S928 device"
   require_cmd adb
   STAGE="/data/local/tmp/rmg-s928/${SELECTED_PROFILE}"
   info "staging ${SELECTED_PROFILE} to ${STAGE}"
@@ -237,7 +276,7 @@ if [ "$DO_PRINT_COMMAND" -eq 1 ]; then
 Next steps:
   1. Install and start Shizuku.
   2. Open Root My Galaxy and grant Shizuku permission.
-  3. Confirm uname -r matches the exact DZF2 string for this phone.
+  3. Confirm uname -r matches the exact bundled string for this phone.
   4. If a previous run failed: adb shell rm -f /data/local/tmp/ksu-payload
 
 EOF
