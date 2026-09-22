@@ -6,6 +6,7 @@ import android.os.LocaleList
 
 enum class AccentColor(val storedValue: String) {
     Dynamic("dynamic"),
+    Red("red"),
     Blue("blue"),
     Violet("violet"),
     Green("green"),
@@ -13,7 +14,7 @@ enum class AccentColor(val storedValue: String) {
 
     companion object {
         fun fromStoredValue(value: String?): AccentColor =
-            entries.firstOrNull { it.storedValue == value } ?: Dynamic
+            entries.firstOrNull { it.storedValue == value } ?: Red
     }
 }
 

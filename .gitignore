@@ -3,6 +3,7 @@
 **/build/
 **/.cxx/
 build-ksu330/
+build-ksunext340/
 local.properties
 
 # Generated/distributable binaries
@@ -14,7 +15,10 @@ local.properties
 *.tar
 *.tar.*
 *.bin
-!app/src/main/assets/manager/KernelSU_v3.3.0_32601-release.apk
+!app/src/standard/assets/manager/KernelSUNextManager.apk
+!app/src/spoofed/assets/manager/KernelSUNextManager.apk
+!dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-standard.apk
+!dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
 
 # Local secrets and signing material
 *.jks

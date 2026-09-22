@@ -58,7 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.busung.s25uroot.ui.theme.RootMyGalaxyTheme
+import dev.busung.s25uroot.ui.theme.KernelSUNextRootTheme
 import kotlinx.coroutines.delay
 
 class InstallActivity : ComponentActivity() {
@@ -75,7 +75,7 @@ class InstallActivity : ComponentActivity() {
         )
         intent.removeExtra(EXTRA_INSTALL_REQUEST_ID)
         setContent {
-            RootMyGalaxyTheme(
+            KernelSUNextRootTheme(
                 accentColor = AppPreferences.accentColor(this),
                 themeMode = AppPreferences.themeMode(this),
             ) {

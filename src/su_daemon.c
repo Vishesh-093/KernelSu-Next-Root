@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 
+#include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <dlfcn.h>
@@ -446,7 +447,27 @@ static int verify_kernelsu_control(void) {
   return 0;
 }
 
+static int valid_manager_package(const char *package_name) {
+  size_t length = package_name == NULL ? 0 : strlen(package_name);
+  if (length < 3 || length > 255 || strchr(package_name, '.') == NULL) {
+    return 0;
+  }
+  for (size_t i = 0; i < length; ++i) {
+    unsigned char c = (unsigned char)package_name[i];
+    if (!(isalnum(c) || c == '.' || c == '_')) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
 static int run_kernelsu_late_load(struct su_request *request, int conn) {
+  const char *manager_package = request->argv[2];
+  if (!valid_manager_package(manager_package)) {
+    dprintf(STDERR_FILENO, "late-load: invalid manager package\n");
+    close_request_fds(request);
+    return 2;
+  }
   pid_t pid = fork();
   if (pid < 0) {
     return 1;
@@ -478,35 +499,15 @@ static int run_kernelsu_late_load(struct su_request *request, int conn) {
       _exit(12);
     }
     if (loader == 0) {
-      /* Let the downloaded target-specific ksud select its embedded module
-       * from the running kernel.  Ephemeral mode avoids replacing an existing
-       * /data/adb/ksud while the app only needs the module for this boot. */
-      execl(LOGCAT_PATH, "logcat", "late-load", "--ephemeral",
-            "--package-name", "me.weishu.kernelsu", (char *)NULL);
+      /* Let the target-specific KernelSU Next daemon select its embedded
+       * module and bind the correct standard or spoofed Manager package. */
+      execl(LOGCAT_PATH, "logcat", "late-load", "--package-name",
+            manager_package, (char *)NULL);
       dprintf(STDERR_FILENO, "late-load: exec: %s\n", strerror(errno));
       _exit(12);
     }
 
     int loader_status = wait_status(loader);
-    if (loader_status == 2) {
-      /* KernelSU 3.3 removed the --ephemeral option.  Keep the old invocation
-       * for 3.2.x payloads, then retry with the 3.3-compatible CLI only when
-       * clap reports a command-line usage error. */
-      loader = fork();
-      if (loader < 0) {
-        dprintf(STDERR_FILENO, "late-load: compatibility retry fork: %s\n",
-                strerror(errno));
-        _exit(12);
-      }
-      if (loader == 0) {
-        execl(LOGCAT_PATH, "logcat", "late-load",
-              "--package-name", "me.weishu.kernelsu", (char *)NULL);
-        dprintf(STDERR_FILENO, "late-load: compatibility retry exec: %s\n",
-                strerror(errno));
-        _exit(12);
-      }
-      loader_status = wait_status(loader);
-    }
     if (loader_status != 0) {
       _exit(loader_status);
     }
@@ -858,7 +859,7 @@ static void serve_one(int conn) {
     return;
   }
 
-  int is_kernelsu_late_load = request.header.argc == 2 &&
+  int is_kernelsu_late_load = request.header.argc == 3 &&
                               strcmp(request.argv[1], "--late-load") == 0;
   int status = is_kernelsu_late_load
                    ? run_kernelsu_late_load(&request, conn)

@@ -35,7 +35,29 @@ profile remains an experimental reuse of the published S928B payload rather
 than a distinct DZDP exploit port. End-to-end validation on the exact connected
 device succeeded, but reclaim reliability remains probabilistic.
 
-## Exact KernelSU 3.3.0 pair
+## Exact KernelSU Next 3.4.0 pair
+
+The current build uses official KernelSU Next v3.4.0 commit
+`1a879d6a866f80b1fa1c1009a2ffa747873cbb5e`, with the maintained Samsung
+KDP/RKP/DEFEX/no-patch-text forward port. The `ksud` binary embeds this exact
+module for offline late loading.
+
+| Artifact | Size | SHA-256 |
+| --- | ---: | --- |
+| `kernelsu/android14-6.1_kernelsu-e3q-S928BXXU5DZDP-kdp-v3.4.0.ko` | 6,264,264 | `5010c298c5f28066df8dca7079adc99a731a3c18f3f544387c2737189bd94a27` |
+| `kernelsu/ksud-e3q-S928BXXU5DZDP-kdp-v3.4.0` | 5,999,776 | `59c4ec0daf2242aa9a95f5c429682f23e7bc18d13a12b798c5890b26ea5ce9b1` |
+
+The module reports KernelSU Next version `33294` and exact vermagic:
+
+```text
+6.1.145-android14-11-33419968-abS928BXXU5DZDP SMP preempt mod_unload modversions aarch64
+```
+
+The standard launcher bundles official manager package `com.rifsxd.ksunext`;
+the spoofed launcher bundles official manager package `yhaxhr.birgvn.bmwbne`.
+Both manager APKs retain the official KernelSU Next signing certificate.
+
+## Previous KernelSU 3.3.0 pair
 
 The KernelSU module was rebuilt from upstream v3.3.0 commit
 `932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e` with the maintained Samsung

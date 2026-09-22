@@ -149,7 +149,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.busung.s25uroot.ui.theme.RootMyGalaxyTheme
+import dev.busung.s25uroot.ui.theme.KernelSUNextRootTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.DateFormat
@@ -161,7 +161,7 @@ import java.util.UUID
 class MainActivity : ComponentActivity() {
     private val installViewModel by viewModels<InstallViewModel>()
     private var resumedOnce = false
-    private var accentColor by mutableStateOf(AccentColor.Dynamic)
+    private var accentColor by mutableStateOf(AccentColor.Red)
     private var themeMode by mutableStateOf(AppThemeMode.System)
     private var advancedMode by mutableStateOf(false)
     private var shizukuMode by mutableStateOf(false)
@@ -175,7 +175,7 @@ class MainActivity : ComponentActivity() {
         advancedMode = AppPreferences.advancedMode(this)
         shizukuMode = AppPreferences.shizukuMode(this)
         setContent {
-            RootMyGalaxyTheme(accentColor = accentColor, themeMode = themeMode) {
+            KernelSUNextRootTheme(accentColor = accentColor, themeMode = themeMode) {
                 RootApp(
                     installViewModel = installViewModel,
                     accentColor = accentColor,
@@ -245,9 +245,9 @@ private val languageOptions = listOf(
 )
 
 private const val KERNEL_SU_MANAGER_URL =
-    "https://github.com/tiann/KernelSU/releases/download/v3.3.0/KernelSU_v3.3.0_32601-release.apk"
-private const val KERNEL_SU_MANAGER_PACKAGE = "me.weishu.kernelsu"
-private const val KERNEL_SU_HOME_URL = "https://kernelsu.org/"
+    "https://github.com/KernelSU-Next/KernelSU-Next/releases/tag/v3.4.0"
+private val KERNEL_SU_MANAGER_PACKAGE = BuildConfig.KSU_MANAGER_PACKAGE
+private const val KERNEL_SU_HOME_URL = "https://github.com/KernelSU-Next/KernelSU-Next"
 private const val SHIZUKU_MANAGER_PACKAGE = "moe.shizuku.manager"
 private const val SHIZUKU_MANAGER_URL = "https://github.com/thedjchi/Shizuku/releases/"
 
@@ -579,7 +579,7 @@ private fun OverviewPage(
                     modifier = Modifier.size(36.dp),
                 )
                 Text(
-                    text = stringResource(R.string.app_name),
+                    text = "KernelSU Next Root",
                     style = MaterialTheme.typography.headlineLarge,
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -1377,7 +1377,7 @@ private fun formatHistoryTime(timestamp: Long): String {
 }
 
 private fun runLogFileName(entry: InstallHistoryEntry): String =
-    "RootMyGalaxy-" +
+    "KernelSUNextRoot-" +
         SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(Date(entry.startedAtMillis)) +
         "-${entry.result.name.lowercase(Locale.US)}.log"
 
@@ -2298,6 +2298,7 @@ private fun languageMatches(option: LanguageOption, currentTag: String): Boolean
 @Composable
 private fun accentLabel(color: AccentColor): String = when (color) {
     AccentColor.Dynamic -> stringResource(R.string.color_dynamic)
+    AccentColor.Red -> stringResource(R.string.color_red)
     AccentColor.Blue -> stringResource(R.string.color_blue)
     AccentColor.Violet -> stringResource(R.string.color_violet)
     AccentColor.Green -> stringResource(R.string.color_green)

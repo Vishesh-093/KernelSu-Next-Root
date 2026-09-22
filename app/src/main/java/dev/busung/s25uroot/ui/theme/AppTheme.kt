@@ -6,20 +6,18 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Typography
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import com.materialkolor.PaletteStyle
-import com.materialkolor.dynamiccolor.ColorSpec
-import com.materialkolor.rememberDynamicColorScheme
 import dev.busung.s25uroot.AccentColor
 import dev.busung.s25uroot.AppThemeMode
 
@@ -39,6 +37,7 @@ private val AppTypography = Typography(
 
 private fun accentSeed(context: Context, accentColor: AccentColor): Color = when (accentColor) {
     AccentColor.Dynamic -> Color(context.getColor(android.R.color.system_accent1_500))
+    AccentColor.Red -> Color(0xFFB3261E)
     AccentColor.Blue -> Color(0xFF415F91)
     AccentColor.Violet -> Color(0xFF6750A4)
     AccentColor.Green -> Color(0xFF356A35)
@@ -46,7 +45,7 @@ private fun accentSeed(context: Context, accentColor: AccentColor): Color = when
 }
 
 @Composable
-fun RootMyGalaxyTheme(
+fun KernelSUNextRootTheme(
     accentColor: AccentColor,
     themeMode: AppThemeMode,
     content: @Composable () -> Unit,
@@ -61,19 +60,8 @@ fun RootMyGalaxyTheme(
     val colors = if (accentColor == AccentColor.Dynamic) {
         if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else {
-        val generatedColors = rememberDynamicColorScheme(
-            seedColor = accentSeed(context, accentColor),
-            isDark = darkTheme,
-            style = PaletteStyle.TonalSpot,
-            specVersion = ColorSpec.SpecVersion.SPEC_2025,
-        )
-        if (darkTheme) {
-            generatedColors
-        } else {
-            generatedColors.copy(
-                onSurfaceVariant = lerp(generatedColors.surface, generatedColors.onSurface, 0.8f),
-            )
-        }
+        val seed = accentSeed(context, accentColor)
+        if (darkTheme) darkColorScheme(primary = seed) else lightColorScheme(primary = seed)
     }
 
     SideEffect {
