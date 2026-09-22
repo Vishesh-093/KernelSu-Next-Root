@@ -11,8 +11,8 @@ android {
     defaultConfig {
         minSdk = 33
         targetSdk = 36
-        versionCode = 341
-        versionName = "1.0.1-s928b-dzdp-offline-ksunext-3.4.0"
+        versionCode = 342
+        versionName = "1.0.2-s928b-dzdp-offline-ksunext-3.4.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
