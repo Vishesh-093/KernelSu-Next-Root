@@ -41,6 +41,10 @@ dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
 The two release launchers are signed locally and include all runtime payloads;
 they do not download the exploit, module, daemon, or manager.
 
+The spoofed flavor has been validated live on the exact phone: KernelSU Next
+reported `Working`, driver `v3.4.0 (33294-4)`, SELinux stayed enforcing, and
+ten consecutive root checks passed.
+
 ## Build offline
 
 With the Android/Gradle caches already prepared:

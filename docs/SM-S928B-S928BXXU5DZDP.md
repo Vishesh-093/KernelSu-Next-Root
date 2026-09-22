@@ -57,6 +57,12 @@ The standard launcher bundles official manager package `com.rifsxd.ksunext`;
 the spoofed launcher bundles official manager package `yhaxhr.birgvn.bmwbne`.
 Both manager APKs retain the official KernelSU Next signing certificate.
 
+Live validation on the exact DZDP phone succeeded on the second controlled
+attempt after the first probabilistic reclaim attempt rebooted the device. The
+spoofed manager reported `Working`, driver `v3.4.0 (33294-4)`, and manager
+`v3.4.0-spoofed (33294-4)`. SELinux remained enforcing and ten consecutive
+`su -c id -u` checks returned `0`.
+
 ## Previous KernelSU 3.3.0 pair
 
 The KernelSU module was rebuilt from upstream v3.3.0 commit

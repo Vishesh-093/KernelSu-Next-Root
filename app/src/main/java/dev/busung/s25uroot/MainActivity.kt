@@ -566,23 +566,29 @@ private fun OverviewPage(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         item {
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 54.dp, bottom = 14.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_app_logo),
-                    contentDescription = null,
-                    modifier = Modifier.size(36.dp),
-                )
-                Text(
-                    text = "KernelSU Next Root",
-                    style = MaterialTheme.typography.headlineLarge,
-                )
-                Spacer(modifier = Modifier.weight(1f))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_app_logo),
+                        contentDescription = null,
+                        modifier = Modifier.size(36.dp),
+                    )
+                    Text(
+                        text = "KernelSU Next Root",
+                        style = MaterialTheme.typography.headlineLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
                 AppVersionText(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f),

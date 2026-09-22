@@ -35,6 +35,28 @@ private val AppTypography = Typography(
     labelMedium = TextStyle(fontSize = 12.sp, lineHeight = 17.sp, fontWeight = FontWeight.Medium),
 )
 
+private val RedLightColors = lightColorScheme(
+    primary = Color(0xFFB3261E),
+    onPrimary = Color.White,
+    primaryContainer = Color(0xFFF9DEDC),
+    onPrimaryContainer = Color(0xFF410E0B),
+    secondary = Color(0xFF775651),
+    onSecondary = Color.White,
+    secondaryContainer = Color(0xFFFFDAD4),
+    onSecondaryContainer = Color(0xFF2C1512),
+)
+
+private val RedDarkColors = darkColorScheme(
+    primary = Color(0xFFF2B8B5),
+    onPrimary = Color(0xFF601410),
+    primaryContainer = Color(0xFF8C1D18),
+    onPrimaryContainer = Color(0xFFF9DEDC),
+    secondary = Color(0xFFE7BDB8),
+    onSecondary = Color(0xFF442925),
+    secondaryContainer = Color(0xFF5D3F3B),
+    onSecondaryContainer = Color(0xFFFFDAD4),
+)
+
 private fun accentSeed(context: Context, accentColor: AccentColor): Color = when (accentColor) {
     AccentColor.Dynamic -> Color(context.getColor(android.R.color.system_accent1_500))
     AccentColor.Red -> Color(0xFFB3261E)
@@ -57,11 +79,14 @@ fun KernelSUNextRootTheme(
         AppThemeMode.Light -> false
         AppThemeMode.Dark -> true
     }
-    val colors = if (accentColor == AccentColor.Dynamic) {
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        val seed = accentSeed(context, accentColor)
-        if (darkTheme) darkColorScheme(primary = seed) else lightColorScheme(primary = seed)
+    val colors = when (accentColor) {
+        AccentColor.Dynamic ->
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        AccentColor.Red -> if (darkTheme) RedDarkColors else RedLightColors
+        else -> {
+            val seed = accentSeed(context, accentColor)
+            if (darkTheme) darkColorScheme(primary = seed) else lightColorScheme(primary = seed)
+        }
     }
 
     SideEffect {
