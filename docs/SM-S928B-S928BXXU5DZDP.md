@@ -63,6 +63,26 @@ spoofed manager reported `Working`, driver `v3.4.0 (33294-4)`, and manager
 `v3.4.0-spoofed (33294-4)`. SELinux remained enforcing and ten consecutive
 `su -c id -u` checks returned `0`.
 
+## Live validation screenshots
+
+The screenshots below were captured on the exact `SM-S928B / S928BXXU5DZDP`
+device used for the validation described above.
+
+### Offline launcher / exact-device match
+
+![KernelSU Next Root launcher active on SM-S928B S928BXXU5DZDP](SM-S928B-S928BXXU5DZDP-Launcher.jpg)
+
+The launcher reports KernelSU Next active and shows the exact firmware,
+Android version, kernel release, and `arm64-v8a (4K)` ABI used by this profile.
+
+### KernelSU Next manager
+
+![KernelSU Next v3.4.0 spoofed manager working on SM-S928B S928BXXU5DZDP](SM-S928B-S928BXXU5DZDP-KernelSU-Next.jpg)
+
+The spoofed manager reports `Working`, driver `v3.4.0 (33294-4)`,
+`LKM (GKI2)`, `Tracepoint` hook mode, an installed metamodule, and enabled
+Zygisk injection.
+
 ## Previous KernelSU 3.3.0 pair
 
 The KernelSU module was rebuilt from upstream v3.3.0 commit
