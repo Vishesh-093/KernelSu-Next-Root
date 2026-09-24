@@ -15,10 +15,13 @@ local.properties
 *.tar
 *.tar.*
 *.bin
+
+# Manager APKs are intentional build inputs.
 !app/src/standard/assets/manager/KernelSUNextManager.apk
 !app/src/spoofed/assets/manager/KernelSUNextManager.apk
-!dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-standard.apk
-!dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
+
+# Release APKs belong in GitHub Releases, not the Git tree.
+# Keep dist/SHA256SUMS tracked as the checksum manifest.
 
 # Local secrets and signing material
 *.jks

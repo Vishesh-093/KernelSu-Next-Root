@@ -1,0 +1,76 @@
+name: Bug report
+description: Report a problem on the documented SM-S928B / DZDP target
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for problems with the documented exact target. Remove serial numbers, account identifiers, tokens, and other private data from logs.
+
+  - type: input
+    id: model
+    attributes:
+      label: Device model
+      placeholder: SM-S928B
+    validations:
+      required: true
+
+  - type: input
+    id: build
+    attributes:
+      label: Firmware / build
+      placeholder: S928BXXU5DZDP
+    validations:
+      required: true
+
+  - type: input
+    id: kernel
+    attributes:
+      label: Full kernel release
+      description: Output of uname -r
+      placeholder: 6.1.145-android14-11-33419968-abS928BXXU5DZDP
+    validations:
+      required: true
+
+  - type: dropdown
+    id: flavor
+    attributes:
+      label: Launcher flavor
+      options:
+        - Standard
+        - Spoofed
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include expected behavior and actual behavior.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Keep the steps limited to your owned/authorized device.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs
+      render: shell
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: I am testing a device I own or am explicitly authorized to test.
+          required: true
+        - label: I removed private identifiers and secrets from logs.
+          required: true

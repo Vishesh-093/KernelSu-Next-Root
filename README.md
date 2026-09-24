@@ -1,93 +1,151 @@
-# KernelSU Next Root — SM-S928B DZDP Offline
+# KernelSU Next Root — Galaxy S24 Ultra SM-S928B / DZDP
 
-An exact-device, fully offline KernelSU Next 3.4.0 build for the Galaxy S24
-Ultra `SM-S928B` running `S928BXXU5DZDP`.
+[![Release](https://img.shields.io/github/v/release/Vishesh-093/KernelSu-Next-Root)](https://github.com/Vishesh-093/KernelSu-Next-Root/releases)
+[![License](https://img.shields.io/github/license/Vishesh-093/KernelSu-Next-Root)](LICENSE)
 
-Author: **Vishesh ([Vishesh-093](https://github.com/Vishesh-093))**
+An exact-device, fully offline **KernelSU Next 3.4.0 temporary-root launcher** for the Samsung Galaxy S24 Ultra `SM-S928B` running `S928BXXU5DZDP`.
 
-This `kernelsu-next` branch was derived from Root My Galaxy and rebranded with
-a red Material 3 theme. It contains two launchers that can coexist:
+> **Status:** device-tested on the exact DZDP target. Root is per boot, SELinux remains enforcing, and the boot image is not modified. The underlying bootstrap exploit is probabilistic and may require retries.
 
-| Variant | Launcher package | Bundled KernelSU Next manager |
-| --- | --- | --- |
-| Standard | `io.github.vishesh093.ksunextroot` | `com.rifsxd.ksunext` |
-| Spoofed | `io.github.vishesh093.ksunextroot.spoofed` | `yhaxhr.birgvn.bmwbne` |
-
-Both manager APKs are the official KernelSU Next v3.4.0 release variants and
-retain the official signing certificate. The launchers verify the bundled
-manager SHA-256 before installation.
-
-## Exact target
+## Supported target
 
 | Field | Required value |
 | --- | --- |
 | Model | `SM-S928B` |
 | Build | `S928BXXU5DZDP` |
 | Kernel | `6.1.145-android14-11-33419968-abS928BXXU5DZDP` |
+| Android | 16 / SDK 36 |
 | KernelSU Next | `3.4.0` / version code `33294` |
 
-Matching is intentionally strict. Other models, firmware builds, and kernel
-releases are rejected. Root is per boot; this does not modify the boot image.
-The exploit remains probabilistic because its physical-page reclaim step can
-require retries.
+Matching is intentionally strict. Other models, firmware builds, and kernel releases are rejected.
 
-Use this only on a device you own or are explicitly authorized to test.
-
-## Offline release APKs
+## What this project does
 
 ```text
-dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-standard.apk
-dist/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
+Stock boot
+   ↓
+Android starts normally
+   ↓
+Shizuku-assisted bootstrap
+   ↓
+CVE-2026-43499 userspace payload
+   ↓
+KernelSU Next module late-load
+   ↓
+Root verification
 ```
 
-The two release launchers are signed locally and include all runtime payloads;
-they do not download the exploit, module, daemon, or manager.
+The project does **not** unlock the bootloader, patch `boot.img`, disable verified boot, or make root persistent across a full reboot.
 
-The spoofed flavor has been validated live on the exact phone: KernelSU Next
-reported `Working`, driver `v3.4.0 (33294-4)`, SELinux stayed enforcing, and
-ten consecutive root checks passed.
+## Release downloads
 
-## Build offline
+Use the GitHub Release assets rather than APK copies committed into the repository:
+
+- [Standard launcher](https://github.com/Vishesh-093/KernelSu-Next-Root/releases/download/v3.4.0/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-standard.apk)
+- [Spoofed-manager launcher](https://github.com/Vishesh-093/KernelSu-Next-Root/releases/download/v3.4.0/KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk)
+- [SHA256SUMS](https://github.com/Vishesh-093/KernelSu-Next-Root/releases/download/v3.4.0/SHA256SUMS)
+
+### Release hashes
+
+```text
+3cb7849e101728a7fe597cdb1da007e82ccb4ee41203a99155b09d7417f01895  KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-standard.apk
+52ee2b5465605d24a20e785cf811abf743a8bad4e316f6f3f9c18f0b8a3379ca  KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
+```
+
+Verify a downloaded release beside `SHA256SUMS` with:
+
+```sh
+sha256sum -c SHA256SUMS
+```
+
+## Launcher variants
+
+| Variant | Launcher package | Bundled KernelSU Next manager |
+| --- | --- | --- |
+| Standard | `io.github.vishesh093.ksunextroot` | `com.rifsxd.ksunext` |
+| Spoofed | `io.github.vishesh093.ksunextroot.spoofed` | `yhaxhr.birgvn.bmwbne` |
+
+Both launchers verify the bundled manager APK SHA-256 before installation. Use the manager variant that matches the launcher used for that test run.
+
+## Usage
+
+1. Confirm the phone is exactly `SM-S928B / S928BXXU5DZDP` with the kernel listed above.
+2. Enable Developer options, USB debugging, and **Disable child process restrictions**.
+3. Start Shizuku in ADB mode.
+4. Open one launcher, grant Shizuku access, and run the DZDP profile.
+5. Install/open the matching bundled KernelSU Next manager when prompted.
+6. Treat a reboot during bootstrap as a failed probabilistic attempt; do not assume root survived a full reboot.
+
+Use only on a device you own or are explicitly authorized to test.
+
+## Validation
+
+Live validation on the exact DZDP phone succeeded after a controlled retry. The validated run reported:
+
+- KernelSU Next `Working`
+- driver `v3.4.0 (33294-4)`
+- SELinux `Enforcing`
+- ten consecutive `su -c id -u` checks returning `0`
+
+Screenshots, exact firmware identity, artifact hashes, vermagic, exploit provenance, and prior KernelSU 3.3.0 validation are documented in [`docs/SM-S928B-S928BXXU5DZDP.md`](docs/SM-S928B-S928BXXU5DZDP.md).
+
+## Important implementation detail
+
+The DZDP bootstrap payload currently reuses the published S928B DZF2 exploit binary because the published DZDP branch artifact is byte-identical to that S928B payload. This repository does **not** claim a distinct DZDP exploit-source port. Device matching, the KernelSU Next module, daemon, vermagic, packaging, and live validation are DZDP-specific.
+
+See [`PORTING.md`](PORTING.md) before adding another firmware build.
+
+## Integrity verification
+
+The repository pins the active exploit, KernelSU Next module/daemon, and both manager APKs in [`checksums/runtime.sha256`](checksums/runtime.sha256).
+
+Run the offline verifier from the repository root:
+
+```sh
+python3 scripts/verify_integrity.py
+```
+
+It verifies the tracked runtime hashes, exact target manifest, release checksum manifest, and that release APKs are not committed into `dist/`.
+
+## Build
 
 With the Android/Gradle caches already prepared:
 
 ```sh
-./gradlew --offline --no-configuration-cache :app:testStandardDebugUnitTest :app:testSpoofedDebugUnitTest
-./gradlew --offline --no-configuration-cache :app:assembleStandardRelease :app:assembleSpoofedRelease
+./gradlew --offline --no-configuration-cache \
+  :app:testStandardDebugUnitTest \
+  :app:testSpoofedDebugUnitTest \
+  :app:assembleStandardRelease \
+  :app:assembleSpoofedRelease
 ```
 
-Release lint is disabled because its standalone Gradle artifact is not present
-in the offline cache. Runtime unit tests and release assembly are still run.
+The repository also includes a GitHub Actions workflow for integrity checks, unit tests, lint, and both debug launcher builds when hosted runners are available.
 
-## Important files
+See [`docs/BUILD-REPRODUCIBILITY.md`](docs/BUILD-REPRODUCIBILITY.md) for reproducibility notes.
+
+## Repository map
 
 ```text
-app/src/main/assets/targets-v3.json
-app/src/main/assets/e3q-S928BXXU5DZDP/cve-2026-43499-app.so
-app/src/main/assets/e3q-S928BXXU5DZDP/ksud-e3q-S928BXXU5DZDP-kdp-v3.4.0
-app/src/standard/assets/manager/KernelSUNextManager.apk
-app/src/spoofed/assets/manager/KernelSUNextManager.apk
-kernelsu/android14-6.1_kernelsu-e3q-S928BXXU5DZDP-kdp-v3.4.0.ko
-kernelsu/ksud-e3q-S928BXXU5DZDP-kdp-v3.4.0
-docs/SM-S928B-S928BXXU5DZDP.md
+app/                         Android launcher application
+app/src/main/assets/         Exact DZDP runtime payload metadata
+kernelsu/                    Exact-vermagic KernelSU Next module/daemon pair
+src/targets/                 Native exploit source profiles from upstream work
+artifacts/                   Published bootstrap payload provenance copies
+checksums/                   Runtime integrity manifest
+docs/                        Validation and architecture documentation
+dist/SHA256SUMS              Release checksum manifest
+scripts/                     Offline verification tools
 ```
 
-## Usage
+## Security and provenance
 
-1. Enable Developer options, USB debugging, and **Disable child process
-   restrictions**.
-2. Start Shizuku in ADB mode.
-3. Open either launcher, grant Shizuku access, and run the exact DZDP profile.
-4. Install/open the matching bundled manager when prompted.
-
-Do not install both manager variants for the same test run. Keep both launcher
-APKs if desired, but use the standard manager with the standard launcher or
-the spoofed manager with the spoofed launcher.
+- Security policy: [`SECURITY.md`](SECURITY.md)
+- Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- Third-party components: [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
+- Exact-device validation: [`docs/SM-S928B-S928BXXU5DZDP.md`](docs/SM-S928B-S928BXXU5DZDP.md)
 
 ## Credits
 
-Derived from [BuSung-dev/Root-My-Galaxy](https://github.com/BuSung-dev/Root-My-Galaxy).
-Kernel root support comes from
-[KernelSU-Next/KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next).
-The exact DZDP profile provenance and validation record are documented in
-[`docs/SM-S928B-S928BXXU5DZDP.md`](docs/SM-S928B-S928BXXU5DZDP.md).
+This project is derived from [BuSung-dev/Root-My-Galaxy](https://github.com/BuSung-dev/Root-My-Galaxy) and uses KernelSU Next from [KernelSU-Next/KernelSU-Next](https://github.com/KernelSU-Next/KernelSU-Next). Upstream authorship, licensing, artifact provenance, and local changes are documented in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+Maintained by **Vishesh ([Vishesh-093](https://github.com/Vishesh-093))**.
