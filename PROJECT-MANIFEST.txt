@@ -1,85 +1,88 @@
-Root My Galaxy SM-S928B/U/W Offline
+KernelSU Next Root — SM-S928B / S928BXXU5DZDP
 
-applicationId: io.github.fusiondrive.RMGs928offline
-versionName: 0.3.8-s928-dzdp-offline-ksu-3.3.0
-versionCode: 48
-debug apk: dist/RootMyGalaxy-S928B-DZDP-offline-KernelSU-v3.3.0.apk
-  size 88914546
-  sha256 401c293474bc6a5e20479dab7bed8c234972e048b5f1fc7ec04421b46976ad87
+Maintainer: Vishesh-093
+Project: https://github.com/Vishesh-093/KernelSu-Next-Root
+License: Apache-2.0
 
-Targets
-  e3q-S928USQS6DZF2
-    models: SM-S928U, SM-S928U1
-    kernel: 6.1.145-android14-11-33419968-abS928USQS6DZF2
-  e3q-S928W-S928USQS6DZF2
-    model: SM-S928W
-    firmware: S928WVLS6DZF2
-    kernel: 6.1.145-android14-11-33419968-abS928USQS6DZF2
-  e3q-S928BXXS6DZF2
-    model: SM-S928B
-    kernel: 6.1.145-android14-11-33419968-abS928BXXS6DZF2
-  e3q-S928BXXU5DZDP (experimental)
-    model: SM-S928B
-    kernel: 6.1.145-android14-11-33419968-abS928BXXU5DZDP
+CURRENT APPLICATION
+  versionName: 1.0.2-s928b-dzdp-offline-ksunext-3.4.0
+  versionCode: 342
+  minSdk: 33
+  targetSdk: 36
+  compileSdk: 37
+  ABI: arm64-v8a
 
-Published artifacts
-  artifacts/e3q-S928USQS6DZF2/cve-2026-43499-app.so
-    size 104128
-    sha256 b2931d8980f969b5a0cb05bd67f6804f445ad4a4c867a7b4c4081c2ffac5b36a
-  artifacts/e3q-S928W-S928USQS6DZF2/cve-2026-43499-app.so
-    size 104128
-    sha256 82531cb637067d8e849f1c9d259933dcc3bed3519c1603841333cc8bcbd789e0
-  artifacts/e3q-S928BXXS6DZF2/cve-2026-43499-app.so
-    size 104128
-    sha256 a49b378d654c7e637697a701c3c4c5fd02d22b9b30a7069c03e64ec5844af206
-  kernelsu/ksud-e3q-S928USQS6DZF2-kdp
-    size 4998352
-    sha256 10c1bf87f8e475e6ab8c5d1c5a085aa1544ee091f4451ad65141ea75261ab610
-  kernelsu/ksud-e3q-S928BXXS6DZF2-kdp
-    size 4748232
-    sha256 43f451313dc111429187f8f93e76c57c42976323782aac936c1c09aa309b76b3
-  kernelsu/android14-6.1_kernelsu-e3q-S928USQS6DZF2-kdp.ko
-    size 400152
-    sha256 ed7afea6cd221d5698739d3a1633264c084ffb77f2df730e5808941e0a555de5
-  kernelsu/android14-6.1_kernelsu-e3q-S928BXXS6DZF2-kdp.ko
-    size 398432
-    sha256 14f805c6a03123e84f10a252eb5b47f6c65c56c05ad4ccccf1f836c6867f64a9
-  kernelsu/ksud-e3q-S928BXXS6DZF2-kdp-v3.3.0
-    size 4989824
-    sha256 396169ca5729ad1c35b557dab32bb2221d150ddfc0c84140aa19a18b7d061abd
-  kernelsu/android14-6.1_kernelsu-e3q-S928BXXS6DZF2-kdp-v3.3.0.ko
-    size 404864
-    sha256 70403cdcd239229a0eec18903002d08c839bc787ab6701ecc7eb31d9ccca5bc1
-  app/src/main/assets/manager/KernelSU_v3.3.0_32601-release.apk
-    size 10777987
-    sha256 c197060ecb89702e7d54a4c95e29cf5e8d97369bbbb436979ab7fd6bcde7b077
-  artifacts/e3q-S928BXXU5DZDP/cve-2026-43499-app.so
-    size 104128
-    sha256 a49b378d654c7e637697a701c3c4c5fd02d22b9b30a7069c03e64ec5844af206
-  kernelsu/ksud-e3q-S928BXXU5DZDP-kdp-v3.3.0
-    size 6647424
-    sha256 5686641a536ee92ab69451e025985c7be01bef2c452582fa338b276a445ee5de
-  kernelsu/android14-6.1_kernelsu-e3q-S928BXXU5DZDP-kdp-v3.3.0.ko
-    size 5849640
-    sha256 dd677e9e9e6372009a3a8e68ca1ba0ec1c889d23a3547cd7f4c1aa2c07dd7882
-  app/src/main/jniLibs/arm64-v8a/libcve43499root.so
-    size 27424
-    sha256 370ca3c5a1b9514b279c8b31ce231d27ba69ecef6744664c476d423e08c6bf47
-  app/src/main/assets/manager/KernelSU_v3.3.0_32601-release.apk
-    size 10777987
-    sha256 c197060ecb89702e7d54a4c95e29cf5e8d97369bbbb436979ab7fd6bcde7b077
+LAUNCHER FLAVORS
+  standard
+    applicationId: io.github.vishesh093.ksunextroot
+    manager package: com.rifsxd.ksunext
 
-Provenance
-  S928U/U1 payload: local device-tested public-source build
-  S928W payload: rebuilt here from PR #216 header deltas
-  S928W ksud: S928B no-patch-text pair, as recorded in PR #216
-  S928B legacy payload: RiosWesley/Root-My-Galaxy-Payloads@d9259fb31872de21e93b2411b3a0c09bc7693499
-  S928B v3.3.0 payload: KernelSU v3.3.0 (932014ab5b2c9b74a3d11e2ec4d17dd10fc9442e)
-    with the maintained Samsung KDP/RKP/DEFEX/no-patch-text forward port
-    built against android14-6.1 DDK, statically audited, and live-tested on exact DZDP hardware
-  Bundled manager: official KernelSU v3.3.0 release APK (versionCode 32601)
-  S928B DZDP exploit: keyarr/Root-My-Galaxy-Payloads
-    zdp-s928b-support@06a9730d6d31ad27407ac9c5680dd907296a91bd
-    byte-identical to the published S928B DZF2 exploit; experimental
-  S928B DZDP KernelSU: exact-vermagic v3.3.0 local build; live driver 32601 verified
-  App packaging: soumarcelino/Root-My-Galaxy-SM-S918B asset:// offline flow
+  spoofed
+    applicationId: io.github.vishesh093.ksunextroot.spoofed
+    manager package: yhaxhr.birgvn.bmwbne
+
+EXACT SUPPORTED TARGET
+  model: SM-S928B
+  build token: S928BXXU5DZDP
+  kernel: 6.1.145-android14-11-33419968-abS928BXXU5DZDP
+  Android: 16 / SDK 36
+  KernelSU Next: 3.4.0 / version code 33294
+
+RUNTIME PAYLOAD MANIFEST
+  app/src/main/assets/targets-v3.json
+
+  exploit
+    path: app/src/main/assets/e3q-S928BXXU5DZDP/cve-2026-43499-app.so
+    size: 104128
+    sha256: a49b378d654c7e637697a701c3c4c5fd02d22b9b30a7069c03e64ec5844af206
+
+  KernelSU Next daemon
+    path: app/src/main/assets/e3q-S928BXXU5DZDP/ksud-e3q-S928BXXU5DZDP-kdp-v3.4.0
+    size: 5999776
+    sha256: 59c4ec0daf2242aa9a95f5c429682f23e7bc18d13a12b798c5890b26ea5ce9b1
+
+  KernelSU Next module
+    path: kernelsu/android14-6.1_kernelsu-e3q-S928BXXU5DZDP-kdp-v3.4.0.ko
+    size: 6264264
+    sha256: 5010c298c5f28066df8dca7079adc99a731a3c18f3f544387c2737189bd94a27
+    vermagic: 6.1.145-android14-11-33419968-abS928BXXU5DZDP SMP preempt mod_unload modversions aarch64
+
+RELEASE v3.4.0
+  standard APK
+    release asset: KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-standard.apk
+    sha256: 3cb7849e101728a7fe597cdb1da007e82ccb4ee41203a99155b09d7417f01895
+
+  spoofed APK
+    release asset: KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
+    sha256: 52ee2b5465605d24a20e785cf811abf743a8bad4e316f6f3f9c18f0b8a3379ca
+
+VALIDATION
+  exact device: SM-S928B / S928BXXU5DZDP
+  result: KernelSU Next Working
+  driver: v3.4.0 (33294-4)
+  SELinux: Enforcing
+  repeated root checks: 10/10 returned uid 0
+  bootstrap reliability: probabilistic; one controlled attempt rebooted before a later successful run
+
+PROVENANCE
+  Root My Galaxy:
+    https://github.com/BuSung-dev/Root-My-Galaxy
+
+  KernelSU Next:
+    https://github.com/KernelSU-Next/KernelSU-Next
+    v3.4.0 source commit recorded in docs/SM-S928B-S928BXXU5DZDP.md
+
+  DZDP bootstrap payload:
+    published under keyarr/Root-My-Galaxy-Payloads zdp-s928b-support
+    recorded commit: 06a9730d6d31ad27407ac9c5680dd907296a91bd
+    byte-identical to the published S928B DZF2 payload
+    this repository does not claim a distinct DZDP exploit-source port
+
+AUTHORITATIVE DOCUMENTS
+  README.md
+  PORTING.md
+  SECURITY.md
+  THIRD_PARTY_NOTICES.md
+  docs/ARCHITECTURE.md
+  docs/BUILD-REPRODUCIBILITY.md
+  docs/SM-S928B-S928BXXU5DZDP.md
