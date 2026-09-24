@@ -1,0 +1,57 @@
+name: Firmware port request
+description: Request investigation of another exact S24 Ultra firmware profile
+title: "[Port] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A matching three-part kernel version is not enough for compatibility. Port requests need the exact model, build, and full kernel release.
+
+  - type: input
+    id: model
+    attributes:
+      label: Device model
+      placeholder: SM-S928B
+    validations:
+      required: true
+
+  - type: input
+    id: build
+    attributes:
+      label: Firmware / build token
+      placeholder: S928B...
+    validations:
+      required: true
+
+  - type: input
+    id: kernel
+    attributes:
+      label: Full kernel release
+      description: Output of uname -r
+    validations:
+      required: true
+
+  - type: input
+    id: android
+    attributes:
+      label: Android / SDK version
+      placeholder: Android 16 / SDK 36
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Available evidence
+      description: Describe kernel/BTF/config/build information you can legally provide. Do not upload private firmware keys, credentials, or device identifiers.
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: I understand this request does not imply the current DZDP payload is safe for my firmware.
+          required: true
+        - label: I am testing hardware I own or am explicitly authorized to test.
+          required: true
