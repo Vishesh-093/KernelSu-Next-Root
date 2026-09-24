@@ -1,6 +1,5 @@
 # KernelSU Next Root — Galaxy S24 Ultra SM-S928B / DZDP
 
-[![CI](https://github.com/Vishesh-093/KernelSu-Next-Root/actions/workflows/ci.yml/badge.svg)](https://github.com/Vishesh-093/KernelSu-Next-Root/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/Vishesh-093/KernelSu-Next-Root)](https://github.com/Vishesh-093/KernelSu-Next-Root/releases)
 [![License](https://img.shields.io/github/license/Vishesh-093/KernelSu-Next-Root)](LICENSE)
 
@@ -53,7 +52,7 @@ Use the GitHub Release assets rather than APK copies committed into the reposito
 52ee2b5465605d24a20e785cf811abf743a8bad4e316f6f3f9c18f0b8a3379ca  KernelSUNextRoot-SM-S928B-DZDP-v3.4.0-spoofed.apk
 ```
 
-Verify before installing:
+Verify a downloaded release beside `SHA256SUMS` with:
 
 ```sh
 sha256sum -c SHA256SUMS
@@ -96,6 +95,18 @@ The DZDP bootstrap payload currently reuses the published S928B DZF2 exploit bin
 
 See [`PORTING.md`](PORTING.md) before adding another firmware build.
 
+## Integrity verification
+
+The repository pins the active exploit, KernelSU Next module/daemon, and both manager APKs in [`checksums/runtime.sha256`](checksums/runtime.sha256).
+
+Run the offline verifier from the repository root:
+
+```sh
+python3 scripts/verify_integrity.py
+```
+
+It verifies the tracked runtime hashes, exact target manifest, release checksum manifest, and that release APKs are not committed into `dist/`.
+
 ## Build
 
 With the Android/Gradle caches already prepared:
@@ -108,7 +119,7 @@ With the Android/Gradle caches already prepared:
   :app:assembleSpoofedRelease
 ```
 
-Public CI uses a normal online dependency-resolution environment and validates unit tests, debug builds, target metadata, and checked release hashes.
+The repository also includes a GitHub Actions workflow for integrity checks, unit tests, lint, and both debug launcher builds when hosted runners are available.
 
 See [`docs/BUILD-REPRODUCIBILITY.md`](docs/BUILD-REPRODUCIBILITY.md) for reproducibility notes.
 
@@ -120,8 +131,10 @@ app/src/main/assets/         Exact DZDP runtime payload metadata
 kernelsu/                    Exact-vermagic KernelSU Next module/daemon pair
 src/targets/                 Native exploit source profiles from upstream work
 artifacts/                   Published bootstrap payload provenance copies
+checksums/                   Runtime integrity manifest
 docs/                        Validation and architecture documentation
 dist/SHA256SUMS              Release checksum manifest
+scripts/                     Offline verification tools
 ```
 
 ## Security and provenance
