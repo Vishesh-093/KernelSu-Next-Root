@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RootMyGalaxyS928DZF2"
+rootProject.name = "KernelSuNextRoot"
 include(":app")
