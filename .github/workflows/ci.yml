@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integrity:
+    name: Runtime integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify tracked runtime artifacts
+        run: sha256sum -c checksums/runtime.sha256
+
+      - name: Validate exact target manifest
+        run: |
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import re
+
+          root = pathlib.Path('.')
+          data = json.loads((root / 'app/src/main/assets/targets-v3.json').read_text())
+          assert data['schemaVersion'] == 3
+          assert len(data['payloads']) == 1, 'Only the exact validated target should be active'
+
+          p = data['payloads'][0]
+          assert p['payloadId'] == 'e3q-S928BXXU5DZDP'
+          assert p['models'] == ['SM-S928B']
+          assert p['kernelVersions'] == ['6.1.145']
+          assert p['kernelReleases'] == [
+              '6.1.145-android14-11-33419968-abS928BXXU5DZDP'
+          ]
+          assert p['buildTokens'] == ['S928BXXU5DZDP']
+          assert p['exploit']['url'].startswith('asset://')
+          assert p['kernelsu']['url'].startswith('asset://')
+          assert p['exploit']['size'] == 104128
+          assert p['exploit']['sha256'] == 'a49b378d654c7e637697a701c3c4c5fd02d22b9b30a7069c03e64ec5844af206'
+          assert p['kernelsu']['size'] == 5999776
+          assert p['kernelsu']['sha256'] == '59c4ec0daf2242aa9a95f5c429682f23e7bc18d13a12b798c5890b26ea5ce9b1'
+
+          sums = (root / 'dist/SHA256SUMS').read_text().strip().splitlines()
+          assert len(sums) == 2
+          for line in sums:
+              digest, name = line.split(maxsplit=1)
+              assert re.fullmatch(r'[0-9a-f]{64}', digest)
+              assert name.endswith('.apk')
+          PY
+
+      - name: Ensure release APKs are not tracked in dist
+        run: |
+          if find dist -maxdepth 1 -type f -name '*.apk' -print -quit | grep -q .; then
+            echo 'Release APKs must be published through GitHub Releases, not tracked in dist/' >&2
+            exit 1
+          fi
+
+  android-build:
+    name: Android tests and builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android platform and NDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager \
+            'platform-tools' \
+            'platforms;android-37' \
+            'ndk;29.0.14206865'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Make wrapper executable
+        run: chmod +x gradlew
+
+      - name: Unit tests
+        run: |
+          ./gradlew --no-configuration-cache \
+            :app:testStandardDebugUnitTest \
+            :app:testSpoofedDebugUnitTest
+
+      - name: Lint debug variants
+        run: |
+          ./gradlew --no-configuration-cache \
+            :app:lintStandardDebug \
+            :app:lintSpoofedDebug
+
+      - name: Assemble debug variants
+        run: |
+          ./gradlew --no-configuration-cache \
+            :app:assembleStandardDebug \
+            :app:assembleSpoofedDebug
